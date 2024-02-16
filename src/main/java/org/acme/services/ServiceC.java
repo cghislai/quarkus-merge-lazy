@@ -14,6 +14,8 @@ public class ServiceC {
 
     @Inject
     EntityManager em;
+    @Inject
+    ServiceB serviceB;
 
     public EntityC createEntityC(EntityBLazy entityBLazy) {
         EntityC entityC = new EntityC();
@@ -22,6 +24,10 @@ public class ServiceC {
     }
 
     public EntityC doSomething(EntityC entityC) {
-        return em.merge(entityC);
+        EntityC managedEntityC = em.merge(entityC);
+
+        serviceB.doSomething(managedEntityC.getEntityBLazy());
+
+        return managedEntityC;
     }
 }
