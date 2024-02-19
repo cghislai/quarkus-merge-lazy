@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.acme.entities.EntityA;
 import org.acme.entities.EntityBEager;
 import org.acme.entities.EntityBLazy;
+import org.hibernate.Hibernate;
 
 @ApplicationScoped
 @Transactional
@@ -25,7 +26,10 @@ public class ServiceB {
     public EntityBLazy createEntityBLazy(EntityA entityA) {
         EntityBLazy entityBLazy = new EntityBLazy();
         entityBLazy.setLazyEntityA(entityA);
-        return em.merge(entityBLazy);
+        EntityBLazy managedEntityBLazy = em.merge(entityBLazy);
+//      workaround: this also solves the problem
+//        Hibernate.initialize(managedEntityBLazy.lazyEntityA);
+        return managedEntityBLazy;
     }
 
     public EntityBEager doSomething(EntityBEager entityBEager) {
